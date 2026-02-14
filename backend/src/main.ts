@@ -1,6 +1,8 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,7 @@ async function bootstrap() {
       excludeExtraneousValues: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
   await app.listen(process.env.PORT ?? 3001);
 }
 void bootstrap();
